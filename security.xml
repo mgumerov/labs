@@ -1,0 +1,31 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"          
+      xmlns:beans="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                 http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+                 http://www.springframework.org/schema/security 
+                 http://www.springframework.org/schema/security/spring-security-3.2.xsd"> 
+
+  
+<http access-denied-page="/error403.jsp"> 
+   <intercept-url pattern="/users*" access="ROLE_ADMIN"/>  
+   <intercept-url pattern="/*" access="ROLE_USER"/>  
+   <form-login/>
+   <logout/>
+</http> 
+
+<authentication-manager> 
+   <authentication-provider> 
+     <jdbc-user-service data-source-ref="securityDataSource" 
+                           users-by-username-query="select username, password, 1 as enabled from users where username = ?"
+                           authorities-by-username-query="select username, role from (
+                                                            select username, 'ROLE_ADMIN' role
+                                                            from users
+                                                            where (isadmin = 1)
+                                                            UNION
+                                                            select username, 'ROLE_USER' role
+                                                            from users
+                                                          ) where username = ?"/>
+   </authentication-provider> 
+</authentication-manager> 
+</beans:beans> 

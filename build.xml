@@ -1,0 +1,62 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="java-build-tools" default="compile">
+ 
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build" />
+    <property name="classes.dir" value="${build.dir}/WEB-INF/classes"/>
+    <property name="lib.dir" value="lib" />
+    <property file="deploy.ant.properties"/>
+
+    <path id="lib.path.id">
+        <fileset dir="${lib.dir}" />
+        <fileset dir="${catalina.home}/bin">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${catalina.home}/lib">
+          <include name="*.jar"/>
+        </fileset>
+    </path>
+ 
+    <target name="resolve">
+        <!--ivy:retrieve /-->
+    </target>
+ 
+    <target name="clean">
+        <delete dir="${build.dir}" failonerror="false"/>
+    </target>
+ 
+    <target name="compile2" depends="clean, resolve">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="lib.path.id"/>
+        <copy todir="${build.dir}/WEB-INF/lib">
+          <fileset dir="${lib.dir}"/>
+        </copy>
+    </target>
+ 
+    <!--target name="run" depends="compile">
+      <java fork="yes" failOnError="true" className="Test">
+        <classpath refid="lib.path.id"/>
+        <classpath> <pathelement location="${classes.dir}"/> </classpath>
+        <arg line="info.tar"/>
+      </java>
+    </target-->
+
+    <target name="dist" depends="compile2" description="Create binary distribution">
+        <copy todir="build/WEB-INF/">
+          <fileset dir="."><include name="web.xml"/></fileset>
+          <fileset dir="."><include name="*-servlet.xml"/></fileset>
+          <!--fileset dir="."><include name="logConfiguration.xml"/></fileset-->
+          <fileset dir="."><include name="security.xml"/></fileset>
+          <fileset dir="."><include name="applicationContext.xml"/></fileset>
+        </copy>
+        <copy todir="build/WEB-INF/classes">
+          <fileset dir="./db"><include name="init.sql"/></fileset>
+        </copy>
+        <!--copy todir="build/META-INF/">
+        </copy-->
+      <jar jarfile="build/build.war" basedir="build"/>
+    </target>
+
+    <target name="compile" depends="clean, dist"/>
+
+</project>
