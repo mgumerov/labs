@@ -22,4 +22,8 @@
   <!--property name="dataSource" ref="securityDataSource"/-->
 </bean>
 
+<bean class="slicer.proj2.LoginController">
+  <property name="dataSource" ref="securityDataSource"/>
+</bean>
+
 </beans>
