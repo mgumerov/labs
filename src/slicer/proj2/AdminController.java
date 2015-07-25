@@ -4,6 +4,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+//java 1.7
+import org.springframework.jdbc.core.RowMapper;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -33,26 +40,21 @@ public class AdminController {
     public boolean isAdmin() { return isAdmin; }
   }
 
-  @RequestMapping("/")
-  @ResponseBody
-  public String getRoot() {
-    final StringBuilder sb = new StringBuilder();
-    sb.append("<html><head/><body><a href=\"j_spring_security_logout\">Logout</a><br/>");
-    sb.append("TODO: Messages view");
-    sb.append("</body></html>");
-    return sb.toString();
-  }
-
   @RequestMapping("/users")
   @ResponseBody
   //Я не обещал хорошую организацию gui; начну с такой
-  public String getUsers() {
-    final List<UserInfo> users = namedParameterJdbcTemplate.query("select username, isadmin from users order by username", Collections.emptyMap(),
-      (ResultSet rs, int rowNum) -> new UserInfo(rs.getString(1), rs.getBoolean(2)));
+  public String getUsers(@ModelAttribute("errorClass") final String errorClass) {
+    final List<UserInfo> users = namedParameterJdbcTemplate.query("select username, isadmin from users order by username", Collections.<String,String>emptyMap(),
+      new RowMapper<UserInfo>() {
+        @Override public UserInfo mapRow(ResultSet rs, int rowNum) throws SQLException { return new UserInfo(rs.getString(1), rs.getBoolean(2)); }
+      });
 
     final StringBuilder sb = new StringBuilder();
     sb.append("<html><head/><body>");
     sb.append("<a href=\"j_spring_security_logout\">Logout</a> <a href=\"msg\">Messaging</a><br/>");
+    if (errorClass != null) {
+      sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>");
+    }
     sb.append("<table>");
     for (final UserInfo user : users) {
       final String action = user.isAdmin() ? "Demote" : "Promote";
@@ -85,10 +87,15 @@ public class AdminController {
   }
 
   @RequestMapping("/users/add")
-  public String getAdd(@RequestParam("login") final String login, @RequestParam("password") final String password) {
-    namedParameterJdbcTemplate.update("insert into users(username, password, isadmin) values(:username, :password, 0)",
-      new MapSqlParameterSource().addValue("username", login).addValue("password", password));
-
+  public String getAdd(@RequestParam("login") final String login, @RequestParam("password") final String password,
+    RedirectAttributes redirectAttributes) {
+    try {
+      //TODO restrict allowed characters in a login
+      namedParameterJdbcTemplate.update("insert into users(username, password, isadmin) values(:username, :password, 0)",
+        new MapSqlParameterSource().addValue("username", login).addValue("password", password));
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("errorClass", e.getClass().getName());
+    }
     return "redirect:/users";
   }
 
