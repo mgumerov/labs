@@ -5,27 +5,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
-
-//java 1.7
-import org.springframework.jdbc.core.RowMapper;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.List;
-import java.sql.ResultSet;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 @Controller
 public class LoginController {
 
-  private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-  public void setDataSource(final DataSource dataSource) {
-    this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+  private UserManagement userManagement;
+  public void setUserManagement(final UserManagement userManagement) {
+    this.userManagement = userManagement;
   }
 
   @RequestMapping("/auth")
@@ -84,9 +72,7 @@ public class LoginController {
   public String getAdd(@RequestParam("username") final String username, @RequestParam("password") final String password,
     RedirectAttributes redirectAttributes) {
     try {
-      //TODO restrict allowed characters in a login
-      namedParameterJdbcTemplate.update("insert into users(username, password, isadmin) values(:username, :password, 0)",
-        new MapSqlParameterSource().addValue("username", username).addValue("password", password));
+      userManagement.createUser(username, password);
     } catch (Exception e) {
       redirectAttributes.addFlashAttribute("errorClass", e.getClass().getName());
       return "redirect:/newUser";

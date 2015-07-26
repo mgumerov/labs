@@ -19,7 +19,7 @@
 <!--context:component-scan base-package="slicer.proj"/-->
 
 <bean class="slicer.proj2.AdminController">
-  <property name="dataSource" ref="securityDataSource"/>
+  <property name="userManagement" ref="userManagement"/>
 </bean>
 
 <bean class="slicer.proj2.MessagingController">
@@ -27,6 +27,10 @@
 </bean>
 
 <bean class="slicer.proj2.LoginController">
+  <property name="userManagement" ref="userManagement"/>
+</bean>
+
+<bean id="userManagement" class="slicer.proj2.UserManagementImpl">
   <property name="dataSource" ref="securityDataSource"/>
 </bean>
 
