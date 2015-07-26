@@ -10,6 +10,7 @@
 <http access-denied-page="/error403.jsp"> 
    <intercept-url pattern="/auth*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/>  
    <intercept-url pattern="/loggedOut*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/>  
+   <intercept-url pattern="/newUser*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/>  
    <intercept-url pattern="/users*" access="ROLE_ADMIN"/>  
    <intercept-url pattern="/*" access="ROLE_USER"/>
    <!--intercept-url pattern="/*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/-->

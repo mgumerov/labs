@@ -52,14 +52,14 @@ public class AdminController {
     final StringBuilder sb = new StringBuilder();
     sb.append("<html><head/><body>");
     sb.append("<a href=\"j_spring_security_logout\">Logout</a> <a href=\"msg\">Messaging</a><br/>");
-    if (errorClass != null) {
-      sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>");
-    }
+    sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>");
     sb.append("<table>");
     for (final UserInfo user : users) {
       final String action = user.isAdmin() ? "Demote" : "Promote";
       sb.append("<tr><td>").append(user.getLogin()).append("</td>");
       //сорри, некогда тратить время на html-кодирование и url-кодирование логина, лучше будем считать что он english alphanumeric
+      //А вообще, необходимость явного escaping зависит от конкретного фронтэнда, например вроде бы JSP сам понимает, что нужно
+      //при подстановке выполнять html-encoding? там вроде и для url какой-то серверный тег есть.
       sb.append("<td><a href='users/delete?login="+user.getLogin()+"'\">Delete</a></td>");
       sb.append("<td><a href='users/"+action+"?login="+user.getLogin()+"'\">"+action+"</a></td>");
       sb.append("</td></tr>");

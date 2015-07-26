@@ -30,18 +30,18 @@ public class LoginController {
 
   @RequestMapping("/auth")
   @ResponseBody
-  //Не буду делать ссылку на главную страницу, она не имеет смысла - находясь на странице регистрации, мы один 
-  //черт не имеем полномочий для просмотра главной страницы
   public String getLoginPage(@RequestParam(value="error", required=false) final String error,
     @RequestParam(value="logout", required=false) final String logout, final HttpServletRequest request)
   {
     final StringBuilder sb = new StringBuilder();
     sb.append("<html><head/><body>");
     sb.append("Authentication is required<br>");
+    sb.append("<font color=\"red\">");
     if (error != null) {
       final Exception exc = (Exception)request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
-      sb.append("<font color=\"red\">").append(exc.getMessage()).append("</font><br/>");
+      sb.append(exc.getMessage());
     }
+    sb.append("</font><br/>");
     sb.append("<form action=\"j_spring_security_check\" method=\"post\">");
     sb.append("<p><label for=\"username\">Username</label><input type=\"text\" id=\"username\" name=\"j_username\"/></p>");
     sb.append("<p><label for=\"password\">Password</label><input type=\"password\" id=\"password\" name=\"j_password\"/></p>");
@@ -63,8 +63,21 @@ public class LoginController {
   }
 
   @RequestMapping("/newUser")
-  public String getNewUserPage() {
-    return "redirect:/auth";
+  @ResponseBody
+  //Не буду делать ссылку на главную страницу, она не имеет смысла - находясь на странице регистрации, мы один 
+  //черт не имеем полномочий для просмотра главной страницы; вместо этого сделаю ссылку на страницу логина, что
+  //по факту будет давать тот же эффект, но построено будет логичнее
+  public String getNewUserPage(@ModelAttribute("errorClass") final String errorClass) {
+    final StringBuilder sb = new StringBuilder();
+    sb.append("<html><head/><body>");
+    sb.append("<a href=\"auth\">Back to login page</a><br/>");
+    sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>");
+    sb.append("<form action=\"newUser/add\" method=\"post\">");
+    sb.append("<p><label for=\"username\">Username</label><input type=\"text\" id=\"username\" name=\"username\"/></p>");
+    sb.append("<p><label for=\"password\">Password</label><input type=\"password\" id=\"password\" name=\"password\"/></p>");
+    sb.append("<button type=\"submit\">Create</button><br/>");
+    sb.append("</form></body></html>");
+    return sb.toString();
   }
 
   @RequestMapping("/newUser/add")
@@ -78,6 +91,7 @@ public class LoginController {
       redirectAttributes.addFlashAttribute("errorClass", e.getClass().getName());
       return "redirect:/newUser";
     }
-    return "redirect:/msg";
+    //TODO maybe return to a page which had been requested before interception with login page (from which we got to New User)
+    return "redirect:/auth";
   }
 }
