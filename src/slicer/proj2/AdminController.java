@@ -35,7 +35,7 @@ public class AdminController {
       //при подстановке выполнять html-encoding? там вроде и для url какой-то серверный тег есть.
       sb.append("<td><a href='users/delete?login="+user.getLogin()+"'\">Delete</a></td>");
       sb.append("<td><a href='users/"+action+"?login="+user.getLogin()+"'\">"+action+"</a></td>");
-      sb.append("</td></tr>");
+      sb.append("</tr>");
     }
     sb.append("</table>");
     sb.append("<form method=\"get\" action=\"users/add\"><input name=\"login\"/><input name=\"password\"/><input type=\"submit\" value=\"Add\"/></form>");

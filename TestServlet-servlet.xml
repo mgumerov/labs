@@ -23,7 +23,7 @@
 </bean>
 
 <bean class="slicer.proj2.MessagingController">
-  <!--property name="dataSource" ref="securityDataSource"/-->
+  <property name="messageManagement" ref="messageManagement"/>
 </bean>
 
 <bean class="slicer.proj2.LoginController">
@@ -31,6 +31,11 @@
 </bean>
 
 <bean id="userManagement" class="slicer.proj2.UserManagementImpl">
+  <property name="dataSource" ref="securityDataSource"/>
+</bean>
+
+<bean id="messageManagement" class="slicer.proj2.MessageManagementImpl">
+  <!-- a separate messagingDataSource would be better, but it would make on-connect data filling more complex -->
   <property name="dataSource" ref="securityDataSource"/>
 </bean>
 
