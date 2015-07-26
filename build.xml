@@ -42,19 +42,20 @@
     </target-->
 
     <target name="dist" depends="compile2" description="Create binary distribution">
-        <copy todir="build/WEB-INF/">
+        <copy todir="${build.dir}/WEB-INF/">
           <fileset dir="."><include name="web.xml"/></fileset>
           <fileset dir="."><include name="*-servlet.xml"/></fileset>
           <!--fileset dir="."><include name="logConfiguration.xml"/></fileset-->
           <fileset dir="."><include name="security.xml"/></fileset>
           <fileset dir="."><include name="applicationContext.xml"/></fileset>
         </copy>
-        <copy todir="build/WEB-INF/classes">
+        <copy todir="${build.dir}/WEB-INF/classes">
           <fileset dir="./db"><include name="init.sql"/></fileset>
         </copy>
-        <!--copy todir="build/META-INF/">
-        </copy-->
-      <jar jarfile="build/build.war" basedir="build"/>
+        <copy todir="${build.dir}/resources">
+          <fileset dir="./resources"><include name="*"/></fileset>
+        </copy>
+      <jar jarfile="${build.dir}/build.war" basedir="${build.dir}"/>
     </target>
 
     <target name="compile" depends="clean, dist"/>

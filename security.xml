@@ -7,7 +7,7 @@
                  http://www.springframework.org/schema/security/spring-security-3.2.xsd"> 
 
   
-<http access-denied-page="/error403.jsp"> 
+<http access-denied-page="/resources/error403.html"> 
    <intercept-url pattern="/auth*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/>  
    <intercept-url pattern="/loggedOut*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/>  
    <intercept-url pattern="/newUser*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/>  
