@@ -16,6 +16,10 @@ import java.security.Principal;
 @Controller
 public class MessagingController {
 
+  private final static String PAGE_USER_MGMT = "users";
+  private final static String PAGE_MESSAGING = "msg";
+  private final static String PAGE_MSG_TABLE = "msg/table";
+
   private MessageManagement messageManagement;
   public void setMessageManagement(final MessageManagement messageManagement) {
     this.messageManagement = messageManagement;
@@ -26,7 +30,7 @@ public class MessagingController {
    return "redirect:/msg";
   }
 
-  @RequestMapping("/msg")
+  @RequestMapping("/"+PAGE_MESSAGING)
   @ResponseBody
   public String getMessages(final HttpServletRequest request) {
     final StringBuilder sb = new StringBuilder();
@@ -36,7 +40,7 @@ public class MessagingController {
     sb.append("var request;  ");
     sb.append("function requestTable(sortkey)  ");
     sb.append("{  ");
-    sb.append("var url=\"msg/table?sort=\"+sortkey;  ");
+    sb.append("var url=\"" + PAGE_MSG_TABLE + "?sort=\"+sortkey;  ");
 //    sb.append("alert(url);");
     sb.append("if(window.XMLHttpRequest){ request=new XMLHttpRequest(); }  ");
     sb.append("else if(window.ActiveXObject){ request=new ActiveXObject(\"Microsoft.XMLHTTP\"); }  ");
@@ -53,7 +57,7 @@ public class MessagingController {
     sb.append("} }  ");
     sb.append("</script>");
 
-    sb.append("</head><body><a href=\"j_spring_security_logout\">Logout</a> <a href=\"users\">Admin</a><br/>");
+    sb.append("</head><body><a href=\"j_spring_security_logout\">Logout</a> <a href=\"" + PAGE_USER_MGMT + "\">Admin</a><br/>");
     //sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>")
 
     sb.append("<span id=\"dynamic\">");
@@ -66,7 +70,7 @@ public class MessagingController {
     return sb.toString();
   }
 
-  @RequestMapping("/msg/table")
+  @RequestMapping("/"+PAGE_MSG_TABLE)
   @ResponseBody
   public String getMessagesTable(@RequestParam(value="sort") final String _sortKey, final HttpServletRequest request) {
     final MessageManagement.SortKey sortKey = MessageManagement.SortKey.valueOf(_sortKey);
@@ -80,9 +84,9 @@ public class MessagingController {
     final StringBuilder sb = new StringBuilder();
     sb.append("<table>");
     sb.append("<tr>");
-    sb.append("<td><a href=\"#\" onclick=\"requestTable('TIMESTAMP');return false\">Sent</a></td>");
+    sb.append("<td><a href=\"#\" onclick=\"requestTable('" + MessageManagement.SortKey.TIMESTAMP + "');return false\">Sent</a></td>");
     sb.append("<td><b>Sender</b></td>");
-    sb.append("<td><a href=\"#\" onclick=\"requestTable('SUBJECT');return false\">Subject</a></td>");
+    sb.append("<td><a href=\"#\" onclick=\"requestTable('" + MessageManagement.SortKey.SUBJECT +"');return false\">Subject</a></td>");
     if (omniscient)
       sb.append("<td><b>Recipient</b></td>");
     sb.append("</tr>");
