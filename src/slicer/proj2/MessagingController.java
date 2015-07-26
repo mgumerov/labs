@@ -29,9 +29,6 @@ public class MessagingController {
   @RequestMapping("/msg")
   @ResponseBody
   public String getMessages(final HttpServletRequest request) {
-    //final Collection<String> messages = userManagement.getMessageSubjects(null);
-
-    //TODO retrieve this via AJAX
     final StringBuilder sb = new StringBuilder();
     sb.append("<html><head>");
 
@@ -60,7 +57,7 @@ public class MessagingController {
     //sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>")
 
     sb.append("<span id=\"dynamic\">");
-    sb.append(getMessagesTable(MessageManagement.SortKey.TIMESTAMP.toString(), request));  //Propose initial content at once
+    sb.append(renderMessagesTable(MessageManagement.SortKey.TIMESTAMP, getUsernameFilter(request))); //Propose initial content at once
     sb.append("</span>");
 
     sb.append("<button onClick=\"requestTable(document.getElementById('sortkey').value)\">Refresh</>");  
@@ -72,12 +69,13 @@ public class MessagingController {
   @RequestMapping("/msg/table")
   @ResponseBody
   public String getMessagesTable(@RequestParam(value="sort") final String _sortKey, final HttpServletRequest request) {
-    //TODO perhaps it would be better to create our own UserDetails with isAdmin predicate. Or perhaps no.
-    final boolean omniscient = request.isUserInRole("ROLE_ADMIN");
-
     final MessageManagement.SortKey sortKey = MessageManagement.SortKey.valueOf(_sortKey);
-    final Collection<MessageManagement.Message> messages =
-      messageManagement.getMessages(omniscient ? null : request.getUserPrincipal().getName(), sortKey);
+    return renderMessagesTable(sortKey, getUsernameFilter(request));
+  }
+
+  private String renderMessagesTable(final MessageManagement.SortKey sortKey, final String usernameFilter) {
+    final Collection<MessageManagement.Message> messages = messageManagement.getMessages(usernameFilter, sortKey);
+    final boolean omniscient = (usernameFilter == null);
 
     final StringBuilder sb = new StringBuilder();
     sb.append("<table>");
@@ -97,5 +95,9 @@ public class MessagingController {
     sb.append("</table>");
     sb.append("<input id=\"sortkey\" type=\"hidden\" value=\"").append(sortKey).append("\"/>");
     return sb.toString();
+  }
+
+  private String getUsernameFilter(final HttpServletRequest request) {
+    return request.isUserInRole("ROLE_ADMIN") ? null : request.getUserPrincipal().getName();
   }
 }
