@@ -34,28 +34,26 @@ public class MessagingController {
   @ResponseBody
   public String getMessages(final HttpServletRequest request) {
     final StringBuilder sb = new StringBuilder();
-    sb.append("<html><head>");
+    sb.append("<html><head>\n");
 
-    sb.append("<script>");
-    sb.append("var request;  ");
-    sb.append("function requestTable(sortkey)  ");
-    sb.append("{  ");
-    sb.append("var url=\"" + PAGE_MSG_TABLE + "?sort=\"+sortkey;  ");
-//    sb.append("alert(url);");
-    sb.append("if(window.XMLHttpRequest){ request=new XMLHttpRequest(); }  ");
-    sb.append("else if(window.ActiveXObject){ request=new ActiveXObject(\"Microsoft.XMLHTTP\"); }  ");
-    sb.append("try {");  
-    sb.append("request.onreadystatechange=getInfo;  ");
-    sb.append("request.open(\"GET\",url,true);  ");
-    sb.append("request.send();  ");
-    sb.append("} catch(e)  {  alert(\"Unable to connect to server\");}  ");
-    sb.append("} ");
-    sb.append("function getInfo(){  ");
-    sb.append("if(request.readyState==4){  ");
-    sb.append("var val=request.responseText;  ");
-    sb.append("document.getElementById('dynamic').innerHTML=val;  ");
-    sb.append("} }  ");
-    sb.append("</script>");
+    sb.append("<script src=\"resources/jquery-1.11.3.min.js\">");
+    sb.append("</script>\n");
+    sb.append("<script type=\"text/javascript\">   \n");
+    sb.append("function requestTable(sortkey)  \n");
+    sb.append("{  \n");
+    sb.append("    jQuery.ajax({  \n");
+    sb.append("      type: \"GET\",  \n");
+    sb.append("      dataType: \"html\",  \n");
+    sb.append("      url: \"" + PAGE_MSG_TABLE + "?sort=\"+sortkey,  \n");
+    sb.append("      success: function(html) {  \n");
+    sb.append("          document.getElementById('dynamic').innerHTML=html;  \n");
+    sb.append("      },  \n");
+    sb.append("      error: function() {  \n");
+    sb.append("          alert('Failure to load list of messages');\n");
+    sb.append("      }  \n");
+    sb.append("    });  \n");
+    sb.append("}\n");
+    sb.append("</script>\n");
 
     sb.append("</head><body><a href=\"j_spring_security_logout\">Logout</a> <a href=\"" + PAGE_USER_MGMT + "\">Admin</a><br/>");
     //sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>")
@@ -64,7 +62,7 @@ public class MessagingController {
     sb.append(renderMessagesTable(MessageManagement.SortKey.TIMESTAMP, getUsernameFilter(request))); //Propose initial content at once
     sb.append("</span>");
 
-    sb.append("<button onClick=\"requestTable(document.getElementById('sortkey').value)\">Refresh</>");  
+    sb.append("<button onClick=\"requestTable(document.getElementById('sortkey').value)\">Refresh</button>");  
 
     sb.append("</body></html>");
     return sb.toString();
