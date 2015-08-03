@@ -4,6 +4,8 @@
 <c:url var="urlRenderTable" value="/msg.table.do"/>
 <c:url var="urlLogout" value="/j_spring_security_logout"/>
 <c:url var="urlAdmin" value="/users.do"/>
+<c:url var="urlProgressGif" value="/resources/Ajax-loader.gif"/>
+
 
 <html>
 <head>
@@ -17,13 +19,22 @@ function requestTable(sortkey)
       url: "${urlRenderTable}",
       data: {sort: sortkey}, //An efficient way to automate HTML-, URL- and JS- escaping: delegate full GET-URL construction to jQuery
       success: function(html) {  
-          document.getElementById('dynamic').innerHTML=html;  
+          document.getElementById('progress').style.visibility="hidden";  
+          document.getElementById('dynamic').innerHTML=html;
       },  
       error: function() {  
           alert('Failure to load list of messages');
       }  
     });  
 }
+
+function refreshTable() {
+  document.getElementById('progress').style.visibility="visible";
+  requestTable(document.getElementById('sortkey').value);
+}
+
+jQuery(document).ready(refreshTable);
+
 </script>
 </head>
 
@@ -31,10 +42,13 @@ function requestTable(sortkey)
 <body>
 <a href="${urlLogout}">Logout</a> <a href="${urlAdmin}">Admin</a><br/>
 <!--font color="red"><c:out value="${errorClass}" escapeXml="true"/></font><br/-->
+
+<span id="progress">  <img src="${urlProgressGif}"/> Loading data... <br/> </span>
+
 <span id="dynamic">
 <!--renderMessagesTable("requestTable", MessageManagement.SortKey.TIMESTAMP, getUsernameFilter(request))); Propose initial content at once-->
 <input id="sortkey" type="hidden" value="${fn:escapeXml(sortKey)}"/>
 </span>
-<button onClick="requestTable(document.getElementById('sortkey').value)">Refresh</button>
+<button onClick="refreshTable()">Refresh</button>
 </body>
 </html>
