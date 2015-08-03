@@ -55,7 +55,7 @@
         <copy todir="${build.dir}/resources">
           <fileset dir="./resources"><include name="*"/></fileset>
         </copy>
-        <copy todir="${build.dir}/jsp">
+        <copy todir="${build.dir}/WEB-INF/jsp">
           <fileset dir="./jsp"><include name="*"/></fileset>
         </copy>
       <jar jarfile="${build.dir}/build.war" basedir="${build.dir}"/>

@@ -36,7 +36,7 @@ This is a simple web application with a source code organization based on the re
 </listener>
 
 <welcome-file-list> 
-    <welcome-file>jsp/index.jsp</welcome-file> 
+    <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file> 
 </welcome-file-list>
 
 </web-app>
