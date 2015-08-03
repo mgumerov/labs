@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LoginController {
 
-  private final static String PAGE_AUTH = "auth";
-  private final static String PAGE_NEW_USER = "newUser";
-  private final static String PAGE_NEW_USER_ADD = "newUser/add";
-  private final static String PAGE_LOGOUT_CONFIRMATION = "loggedOut";
-  private final static String PAGE_MESSAGING = "msg";
+  private final static String PAGE_AUTH = "auth.do";
+  private final static String PAGE_NEW_USER = "newUser.do";
+  private final static String PAGE_NEW_USER_ADD = "newUser.add.do";
+  private final static String PAGE_LOGOUT_CONFIRMATION = "loggedOut.do";
+  private final static String PAGE_MESSAGING = "msg.do";
 
   private UserManagement userManagement;
   public void setUserManagement(final UserManagement userManagement) {

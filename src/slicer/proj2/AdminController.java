@@ -11,12 +11,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AdminController {
 
-  private final static String PAGE_USER_MGMT = "users";
-  private final static String PAGE_MESSAGING = "msg";
-  private final static String PAGE_ADD_USER = "users/add";
-  private final static String PAGE_DELETE_USER = "users/delete";
-  private final static String PAGE_DEMOTE_USER = "users/demote";
-  private final static String PAGE_PROMOTE_USER = "users/promote";
+  private final static String PAGE_USER_MGMT = "users.do";
+  private final static String PAGE_MESSAGING = "msg.do";
+  private final static String PAGE_ADD_USER = "users.add.do";
+  private final static String PAGE_DELETE_USER = "users.delete.do";
+  private final static String PAGE_DEMOTE_USER = "users.demote.do";
+  private final static String PAGE_PROMOTE_USER = "users.promote.do";
 
   private UserManagement userManagement;
   public void setUserManagement(final UserManagement userManagement) {

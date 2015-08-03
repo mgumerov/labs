@@ -14,8 +14,8 @@
    <intercept-url pattern="/users*" access="ROLE_ADMIN"/>  
    <intercept-url pattern="/*" access="ROLE_USER"/>
    <!--intercept-url pattern="/*" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN"/-->
-   <form-login login-page="/auth" authentication-failure-url="/auth?error"/>
-   <logout logout-success-url="/loggedOut"/>
+   <form-login login-page="/auth.do" authentication-failure-url="/auth.do?error"/>
+   <logout logout-success-url="/loggedOut.do"/>
 </http> 
 
 <authentication-manager> 
