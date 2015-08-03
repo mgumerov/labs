@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,56 +17,18 @@ import java.security.Principal;
 @Controller
 public class MessagingController {
 
-  private final static String PAGE_USER_MGMT = "users";
-  private final static String PAGE_MESSAGING = "msg";
-  private final static String PAGE_MSG_TABLE = "msg/table";
+  public final static String PAGE_USER_MGMT = "users.do";
+  public final static String PAGE_MESSAGING = "msg.do";
+  public final static String PAGE_MSG_TABLE = "msg.table.do";
 
   private MessageManagement messageManagement;
   public void setMessageManagement(final MessageManagement messageManagement) {
     this.messageManagement = messageManagement;
   }
 
-  @RequestMapping("/")
-  public String getRoot() {
-   return "redirect:/msg";
-  }
-
   @RequestMapping("/"+PAGE_MESSAGING)
-  @ResponseBody
-  public String getMessages(final HttpServletRequest request) {
-    final StringBuilder sb = new StringBuilder();
-    sb.append("<html><head>\n");
-
-    sb.append("<script src=\"resources/jquery-1.11.3.min.js\">");
-    sb.append("</script>\n");
-    sb.append("<script type=\"text/javascript\">   \n");
-    sb.append("function requestTable(sortkey)  \n");
-    sb.append("{  \n");
-    sb.append("    jQuery.ajax({  \n");
-    sb.append("      type: \"GET\",  \n");
-    sb.append("      dataType: \"html\",  \n");
-    sb.append("      url: \"" + PAGE_MSG_TABLE + "?sort=\"+sortkey,  \n");
-    sb.append("      success: function(html) {  \n");
-    sb.append("          document.getElementById('dynamic').innerHTML=html;  \n");
-    sb.append("      },  \n");
-    sb.append("      error: function() {  \n");
-    sb.append("          alert('Failure to load list of messages');\n");
-    sb.append("      }  \n");
-    sb.append("    });  \n");
-    sb.append("}\n");
-    sb.append("</script>\n");
-
-    sb.append("</head><body><a href=\"j_spring_security_logout\">Logout</a> <a href=\"" + PAGE_USER_MGMT + "\">Admin</a><br/>");
-    //sb.append("<font color=\"red\">").append(errorClass).append("</font><br/>")
-
-    sb.append("<span id=\"dynamic\">");
-    sb.append(renderMessagesTable(MessageManagement.SortKey.TIMESTAMP, getUsernameFilter(request))); //Propose initial content at once
-    sb.append("</span>");
-
-    sb.append("<button onClick=\"requestTable(document.getElementById('sortkey').value)\">Refresh</button>");  
-
-    sb.append("</body></html>");
-    return sb.toString();
+  public ModelAndView getMessages(final HttpServletRequest request) {
+    return new ModelAndView("messaging.messages", "sortKey", MessageManagement.SortKey.TIMESTAMP);
   }
 
   @RequestMapping("/"+PAGE_MSG_TABLE)

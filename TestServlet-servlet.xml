@@ -9,6 +9,12 @@
 
 <mvc:resources mapping="/resources/**" location="/resources/" />
 
+<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+<property name="prefix" value="/jsp/"/>
+<property name="suffix" value=".jsp"/>
+</bean>
+
 <!--Don't want to use mvc:annotation-driven, so have to introduce this new mapper explicitly-->
 <!--I need it for new Spring 3.1 features like redirect flash-attributes-->
 <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
