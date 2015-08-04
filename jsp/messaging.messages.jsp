@@ -2,10 +2,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <c:url var="urlRenderTable" value="/msg.table.do"/>
-<c:url var="urlLogout" value="/j_spring_security_logout"/>
-<c:url var="urlAdmin" value="/users.do"/>
 <c:url var="urlProgressGif" value="/resources/Ajax-loader.gif"/>
-
+<%@ include file="urls.jspf" %>
 
 <html>
 <head>
@@ -29,7 +27,6 @@ function requestTable(sortkey)
 }
 
 function refreshTable() {
-  document.getElementById('progress').style.visibility="visible";
   requestTable(document.getElementById('sortkey').value);
 }
 
@@ -40,7 +37,8 @@ jQuery(document).ready(refreshTable);
 
 <!--TODO: request data only and format them here, instead of requesting formatted data. Also in that case we can put column def + sort urls right in this JSP, not in another one.-->
 <body>
-<a href="${urlLogout}">Logout</a> <a href="${urlAdmin}">Admin</a><br/>
+<c:set var="thisPage" value="${urlMessaging}"/>
+<%@ include file="menu.jspf" %>
 <!--font color="red"><c:out value="${errorClass}" escapeXml="true"/></font><br/-->
 
 <span id="progress">  <img src="${urlProgressGif}"/> Loading data... <br/> </span>

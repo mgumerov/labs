@@ -1,0 +1,4 @@
+<a href="${urlLogout}">Logout</a>
+<c:if test="${thisPage != urlAdmin}"><a href="${urlAdmin}">Admin</a></c:if>
+<c:if test="${thisPage != urlMessaging}"><a href="${urlMessaging}">Messages</a></c:if>
+<br/>
